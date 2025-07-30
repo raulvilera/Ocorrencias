@@ -985,10 +985,11 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+fetch("https://script.google.com/macros/s/AKfycbwG4hbqB-BA5LfOZDXWJCtMlF8FNoL0wASWdqO4kuW_p1-su2E1PEYTeNF7SjH6i5I/exec", {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
                     },
                     body: JSON.stringify(data)
                 })
