@@ -833,7 +833,7 @@
             const professorSelect = document.getElementById('professor');
             
             // URL do Google Apps Script (substitua pelo seu)
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpTMeGENmeKQhk6yns2X9NsmbefrorqixmRGz5Gn36GnNubL3ZvA--W8aJQVrjP1by/exec";
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec";
             
             // Preencher dropdown de professores
             Object.keys(teacherEmails).forEach(teacherName => {
@@ -935,7 +935,7 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
-                fetch("https://script.google.com/macros/s/AKfycbwpTMeGENmeKQhk6yns2X9NsmbefrorqixmRGz5Gn36GnNubL3ZvA--W8aJQVrjP1by/exec", {
+                fetch(SCRIPT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
