@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Registro de Ocorrências Escolares</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -485,7 +484,7 @@
                 </div>
                 <div class="logo-text">
                     <h1>Registro de Ocorrências Escolares</h1>
-                    <p>Sistema de Gestão de Ocorrências</p>
+                    <p>Sistema integrado com Google Sheets</p>
                 </div>
             </div>
         </div>
@@ -516,7 +515,7 @@
                         <div>
                             <strong>Status de integração:</strong> 
                             <span class="status-indicator status-connected"></span>
-                            Conectado ao banco de dados
+                            Conectado à planilha Google Sheets
                         </div>
                     </div>
                     
@@ -688,19 +687,19 @@
                         <h2><i class="fas fa-chart-line"></i> Estatísticas do Sistema</h2>
                         <div class="stats-grid">
                             <div class="stat-item">
-                                <div class="stat-value">128</div>
+                                <div class="stat-value" id="totalOccurrences">0</div>
                                 <div class="stat-label">Ocorrências registradas</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">42</div>
+                                <div class="stat-value" id="totalStudents">0</div>
                                 <div class="stat-label">Alunos envolvidos</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">18</div>
+                                <div class="stat-value" id="totalClasses">18</div>
                                 <div class="stat-label">Turmas monitoradas</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">24</div>
+                                <div class="stat-value" id="totalTeachers">24</div>
                                 <div class="stat-label">Professores ativos</div>
                             </div>
                         </div>
@@ -711,13 +710,13 @@
                             <i class="fas fa-info-circle"></i> Sobre o Sistema
                         </div>
                         <div class="card-body">
-                            <p>Este sistema permite o registro de ocorrências escolares com integração direta ao banco de dados.</p>
+                            <p>Este sistema permite o registro de ocorrências escolares com integração direta ao Google Sheets.</p>
                             <br>
                             <p><strong>Funcionalidades:</strong></p>
                             <ul style="padding-left: 20px; margin-top: 10px;">
                                 <li>Seleção de turma com carregamento automático dos alunos</li>
                                 <li>Registro detalhado de ocorrências</li>
-                                <li>Integração em tempo real com banco de dados</li>
+                                <li>Integração em tempo real com planilha Google</li>
                                 <li>Estatísticas atualizadas</li>
                                 <li>Interface amigável e responsiva</li>
                             </ul>
@@ -834,6 +833,9 @@
             const classSelect = document.getElementById('studentClass');
             const professorSelect = document.getElementById('professor');
             
+            // URL do Google Apps Script (substitua pelo seu)
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzSfZf0uLZ4gQ5fX5Z7a4q3wY6LdH0d3g6j3q6s0jJ/exec";
+            
             // Preencher dropdown de professores
             Object.keys(teacherEmails).forEach(teacherName => {
                 const option = document.createElement('option');
@@ -907,37 +909,27 @@
                     return;
                 }
                 
-                // Simular consulta ao Google Sheets
-                setTimeout(() => {
-                    const range = classRanges[selectedClass];
-                    if (range) {
-                        // Simular dados retornados do Google Sheets
-                        const sampleStudents = [
-                            "Ana Beatriz Silva", 
-                            "Bruno Oliveira Costa", 
-                            "Carlos Eduardo Santos", 
-                            "Daniela Pereira Lima", 
-                            "Eduardo Martins Souza",
-                            "Fernanda Ribeiro Almeida",
-                            "Gabriel Torres Castro",
-                            "Helena Mendes Dias",
-                            "Igor Barbosa Neves",
-                            "Juliana Carvalho Andrade"
-                        ];
-                        
-                        studentSelect.innerHTML = '<option value="">Selecione um aluno</option>';
-                        sampleStudents.forEach(student => {
-                            const option = document.createElement('option');
-                            option.value = student;
-                            option.textContent = student;
-                            studentSelect.appendChild(option);
-                        });
-                        studentSelect.disabled = false;
-                    } else {
-                        studentSelect.innerHTML = '<option value="">Nenhum aluno encontrado para esta turma</option>';
-                        studentSelect.disabled = true;
-                    }
-                }, 1500);
+                // Consultar o Google Apps Script para obter alunos
+                fetch(`${SCRIPT_URL}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            studentSelect.innerHTML = '<option value="">Selecione um aluno</option>';
+                            data.students.forEach(student => {
+                                const option = document.createElement('option');
+                                option.value = student;
+                                option.textContent = student;
+                                studentSelect.appendChild(option);
+                            });
+                            studentSelect.disabled = false;
+                        } else {
+                            studentSelect.innerHTML = `<option value="">${data.message || 'Erro ao carregar alunos'}</option>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar alunos:', error);
+                        studentSelect.innerHTML = '<option value="">Erro ao carregar alunos</option>';
+                    });
             });
             
             // Limpar formulário
@@ -982,90 +974,72 @@
                     return;
                 }
                 
-                // Simular integração com Google Sheets
-                const sheetId = "1u7qMsMHkZT47OZdar5qvshQDRA8XJrLgDjAZVOViAio";
+                // Preparar dados para envio
                 const data = {
                     professor: professor,
-                    data: occurrenceDate,
-                    aluno: student,
-                    turma: classInfo,
-                    irregularidades: irregularities.join(", "),
-                    descricao: description
+                    occurrenceDate: occurrenceDate,
+                    student: student,
+                    classInfo: classInfo,
+                    irregularities: irregularities.join(", "),
+                    description: description
                 };
                 
-                console.log("Enviando dados para o Google Sheets:");
-                console.log("URL da planilha: https://docs.google.com/spreadsheets/d/" + sheetId);
-                console.log("Aba: Ocorrências dos professores");
-                console.log("Dados:", data);
-                
-                // Em uma implementação real, seria necessário:
-                // 1. Criar um script do Google Apps (GAS)
-                // 2. Publicar o GAS como uma Web App
-                // 3. Fazer uma requisição POST para a URL do Web App
-                // 4. O GAS inseriria os dados na planilha especificada
-                
-                // Exemplo de código GAS para integração:
-                /*
-                function doPost(e) {
-                  const sheet = SpreadsheetApp.openById("1u7qMsMHkZT47OZdar5qvshQDRA8XJrLgDjAZVOViAio")
-                    .getSheetByName("Ocorrências dos professores");
-                  
-                  const data = JSON.parse(e.postData.contents);
-                  const row = [
-                    new Date(), // Timestamp
-                    data.professor,
-                    data.occurrenceDate,
-                    data.student,
-                    data.classInfo,
-                    data.irregularities.join(", "),
-                    data.description
-                  ];
-                  
-                  sheet.appendRow(row);
-                  
-                  return ContentService.createTextOutput(JSON.stringify({result: "success"})).setMimeType(ContentService.MimeType.JSON);
-                }
-                */
-                
-                // Exemplo de código GAS para carregar alunos:
-                /*
-                function getStudentsByClass(className) {
-                  const sheet = SpreadsheetApp.openById("1u7qMsMHkZT47OZdar5qvshQDRA8XJrLgDjAZVOViAio")
-                    .getSheetByName("BANCODEDADOSGERAL");
-                  
-                  // Obter o intervalo correspondente à turma
-                  const classRanges = {
-                    "6° ANO A MANHA": "C3:C46",
-                    // ... outros mapeamentos
-                  };
-                  
-                  const range = classRanges[className];
-                  if (!range) return [];
-                  
-                  const values = sheet.getRange(range).getValues();
-                  
-                  // Filtrar valores vazios e retornar array de alunos
-                  return values
-                    .filter(row => row[0] && row[0].trim() !== "")
-                    .map(row => row[0]);
-                }
-                */
-                
-                // Simular envio bem-sucedido
-                successAlert.style.display = 'flex';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                // Limpar formulário após envio
-                setTimeout(() => {
-                    form.reset();
-                    document.getElementById('occurrenceDate').value = formattedDate;
-                    professorSelect.selectedIndex = 0;
-                    studentSelect.innerHTML = '<option value="">Selecione primeiro a turma</option>';
-                    studentSelect.disabled = true;
-                    classSelect.selectedIndex = 0;
-                    successAlert.style.display = 'none';
-                }, 3000);
+                // Enviar para o Google Sheets via Google Apps Script
+ fetch('https://script.google.com/macros/s/AKfycbzGIwpbcSvs63qn_qSYGzKGuCuuee9kSrBwP726m2e4UDuQLsi0Qe3MKcpe2LiQwm9l/exec', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+})
+.then(response => response.json())
+.then(data => {
+    // Processar a resposta aqui
+})
+.catch(error => {
+    console.error('Erro:', error);
+});
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        successAlert.style.display = 'flex';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        
+                        // Atualizar estatísticas
+                        document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
+                        document.getElementById('totalStudents').textContent = data.totalStudents;
+                        
+                        // Limpar formulário após envio
+                        setTimeout(() => {
+                            form.reset();
+                            document.getElementById('occurrenceDate').value = formattedDate;
+                            professorSelect.selectedIndex = 0;
+                            studentSelect.innerHTML = '<option value="">Selecione primeiro a turma</option>';
+                            studentSelect.disabled = true;
+                            classSelect.selectedIndex = 0;
+                            successAlert.style.display = 'none';
+                        }, 3000);
+                    } else {
+                        throw new Error(data.message || 'Erro desconhecido');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    errorAlert.querySelector('p').textContent = `Erro no envio: ${error.message}`;
+                    errorAlert.style.display = 'flex';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
             });
+            
+            // Carregar estatísticas iniciais
+            fetch(`${SCRIPT_URL}?action=getStats`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
+                        document.getElementById('totalStudents').textContent = data.totalStudents;
+                    }
+                });
         });
     </script>
 </body>
