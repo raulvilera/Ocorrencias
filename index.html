@@ -985,20 +985,13 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
- fetch('https://script.google.com/macros/s/AKfycbzGIwpbcSvs63qn_qSYGzKGuCuuee9kSrBwP726m2e4UDuQLsi0Qe3MKcpe2LiQwm9l/exec', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data)
-})
-.then(response => response.json())
-.then(data => {
-    // Processar a resposta aqui
-})
-.catch(error => {
-    console.error('Erro:', error);
-});
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
