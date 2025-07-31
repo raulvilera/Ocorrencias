@@ -857,7 +857,7 @@
             const formattedDate = today.toISOString().split('T')[0];
             document.getElementById('occurrenceDate').value = formattedDate;
             
-          // Carregar alunos quando uma turma for selecionada
+            // Carregar alunos quando uma turma for selecionada
             classSelect.addEventListener('change', function() {
                 const selectedClass = this.value;
                 studentSelect.innerHTML = '<option value="">Carregando alunos... <span class="loading"></span></option>';
@@ -870,12 +870,7 @@
                 
                 // Consultar o Google Apps Script para obter alunos
                 fetch(`${SCRIPT_URL}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro na resposta da rede');
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         if (data.status === "success") {
                             studentSelect.innerHTML = '<option value="">Selecione um aluno</option>';
@@ -908,11 +903,6 @@
                 
                 // Resetar seleção de turma
                 classSelect.selectedIndex = 0;
-                
-                // Desmarcar todas as checkboxes
-                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
             });
             
             // Enviar formulário
@@ -943,19 +933,13 @@
                     return;
                 }
                 
-                // Mostrar indicador de carregamento
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<span class="loading"></span> Enviando...';
-                submitBtn.disabled = true;
-                
                 // Preparar dados para envio
                 const data = {
                     professor: professor,
                     occurrenceDate: occurrenceDate,
                     student: student,
                     classInfo: classInfo,
-                    irregularities: irregularities,
+                    irregularities: irregularities.join(", "),
                     description: description
                 };
                 
@@ -967,12 +951,7 @@
                     },
                     body: JSON.stringify(data)
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na resposta da rede');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
                         successAlert.style.display = 'flex';
@@ -991,14 +970,9 @@
                             studentSelect.disabled = true;
                             classSelect.selectedIndex = 0;
                             successAlert.style.display = 'none';
-                            
-                            // Desmarcar todas as checkboxes
-                            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                                checkbox.checked = false;
-                            });
                         }, 3000);
                     } else {
-                        throw new Error(data.message || 'Erro desconhecido no servidor');
+                        throw new Error(data.message || 'Erro desconhecido');
                     }
                 })
                 .catch(error => {
@@ -1006,32 +980,20 @@
                     errorAlert.querySelector('p').textContent = `Erro no envio: ${error.message}`;
                     errorAlert.style.display = 'flex';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                })
-                .finally(() => {
-                    // Restaurar botão
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
                 });
             });
             
             // Carregar estatísticas iniciais
             fetch(`${SCRIPT_URL}?action=getStats`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na resposta da rede');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
                         document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
                         document.getElementById('totalStudents').textContent = data.totalStudents;
                     }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar estatísticas:', error);
                 });
         });
     </script>
 </body>
 </html>
+
