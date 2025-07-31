@@ -833,7 +833,7 @@
             const professorSelect = document.getElementById('professor');
             
             // URL do Google Apps Script (substitua pelo seu)
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbcrqkHDWJhASD2Xj6Y9QGEaBpTmciJR3V8Y93fdfEltU_tCV4WFhROOlCvlaxJ7sH/exec";
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxC5bpswYEA2nKJRDp5R9bTdcr2K9FHsLGBD2fcOVrhukpEE_XEfAiXB5qjILzKYpoI/exec";
             
             // Preencher dropdown de professores
             Object.keys(teacherEmails).forEach(teacherName => {
@@ -860,7 +860,7 @@
                 }
                 
                 // Consultar o Google Apps Script para obter alunos
-                fetch(`${"https://script.google.com/macros/s/AKfycbwbcrqkHDWJhASD2Xj6Y9QGEaBpTmciJR3V8Y93fdfEltU_tCV4WFhROOlCvlaxJ7sH/exec"L}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
+                fetch(`${"https://script.google.com/macros/s/AKfycbxC5bpswYEA2nKJRDp5R9bTdcr2K9FHsLGBD2fcOVrhukpEE_XEfAiXB5qjILzKYpoI/exec"L}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === "success") {
@@ -935,7 +935,7 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
-                fetch("https://script.google.com/macros/s/AKfycbwbcrqkHDWJhASD2Xj6Y9QGEaBpTmciJR3V8Y93fdfEltU_tCV4WFhROOlCvlaxJ7sH/exec"L, {
+                fetch("https://script.google.com/macros/s/AKfycbxC5bpswYEA2nKJRDp5R9bTdcr2K9FHsLGBD2fcOVrhukpEE_XEfAiXB5qjILzKYpoI/exec"L, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
