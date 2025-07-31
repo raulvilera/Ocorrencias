@@ -937,16 +937,19 @@
                 // Enviar para o Google Sheets via Google Apps Script
                 fetch("https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec", {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        successAlert.style.display = 'flex';
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    professor: professor,
+    occurrenceDate: occurrenceDate,
+    student: student,
+    classInfo: classInfo,
+    irregularities: irregularities, // Já deve ser um array
+    description: description
+  })
+})
                         
                         // Atualizar estatísticas
                         document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
