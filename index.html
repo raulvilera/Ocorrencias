@@ -857,7 +857,7 @@
             const formattedDate = today.toISOString().split('T')[0];
             document.getElementById('occurrenceDate').value = formattedDate;
             
-            // Carregar alunos quando uma turma for selecionada
+          // Carregar alunos quando uma turma for selecionada
             classSelect.addEventListener('change', function() {
                 const selectedClass = this.value;
                 studentSelect.innerHTML = '<option value="">Carregando alunos... <span class="loading"></span></option>';
