@@ -506,7 +506,7 @@
                         <i class="fas fa-exclamation-circle"></i> 
                         <div>
                             <strong>Erro no preenchimento do formulário</strong>
-                            <p id="errorMessage">Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma irregularidade.</p>
+                            <p>Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma irregularidade.</p>
                         </div>
                     </div>
                     
@@ -539,7 +539,7 @@
                                     <div class="form-col">
                                         <div class="form-group">
                                             <label for="occurrenceDate" class="required">Data da ocorrência</label>
-                                            <input type="date" id="occurrenceDate" required>
+                                            <input type="date" id="occurrenceDate">
                                         </div>
                                     </div>
                                 </div>
@@ -617,47 +617,47 @@
                                 <div class="form-group">
                                     <div class="checkbox-container">
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity1" name="irregularity" value="Não fez a lição">
+                                            <input type="checkbox" id="irregularity1" value="Não fez a lição">
                                             <label for="irregularity1">Não fez a lição</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity2" name="irregularity" value="Não trouxe material">
+                                            <input type="checkbox" id="irregularity2" value="Não trouxe material">
                                             <label for="irregularity2">Não trouxe material</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity3" name="irregularity" value="Fora do lugar constantemente durante a aula">
+                                            <input type="checkbox" id="irregularity3" value="Fora do lugar constantemente durante a aula">
                                             <label for="irregularity3">Fora do lugar durante a aula</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity4" name="irregularity" value="Chegou atrasado">
+                                            <input type="checkbox" id="irregularity4" value="Chegou atrasado">
                                             <label for="irregularity4">Chegou atrasado</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity5" name="irregularity" value="Circulando no corredor durante a aula">
+                                            <input type="checkbox" id="irregularity5" value="Circulando no corredor durante a aula">
                                             <label for="irregularity5">Circulando no corredor</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity6" name="irregularity" value="Uso indevido do celular durante a aula">
+                                            <input type="checkbox" id="irregularity6" value="Uso indevido do celular durante a aula">
                                             <label for="irregularity6">Uso indevido do celular</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity7" name="irregularity" value="Interrompe a aula constantemente">
+                                            <input type="checkbox" id="irregularity7" value="Interrompe a aula constantemente">
                                             <label for="irregularity7">Interrompe a aula constantemente</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity8" name="irregularity" value="Falta de cuidado com o ambiente e o material">
+                                            <input type="checkbox" id="irregularity8" value="Falta de cuidado com o ambiente e o material">
                                             <label for="irregularity8">Falta de cuidado com ambiente/material</label>
                                         </div>
                                         
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="irregularity9" name="irregularity" value="Vestimenta inadequada">
+                                            <input type="checkbox" id="irregularity9" value="Vestimenta inadequada">
                                             <label for="irregularity9">Vestimenta inadequada</label>
                                         </div>
                                     </div>
@@ -665,7 +665,7 @@
                                 
                                 <div class="form-group">
                                     <label for="description" class="required">Breve relato do ocorrido</label>
-                                    <textarea id="description" placeholder="Descreva detalhadamente a ocorrência..." required></textarea>
+                                    <textarea id="description" placeholder="Descreva detalhadamente a ocorrência..."></textarea>
                                 </div>
                                 
                                 <div class="actions">
@@ -831,10 +831,9 @@
             const studentSelect = document.getElementById('student');
             const classSelect = document.getElementById('studentClass');
             const professorSelect = document.getElementById('professor');
-            const errorMessage = document.getElementById('errorMessage');
             
-            // URL do Google Apps Script (substitua pela sua)
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzODUPzGoEFDVu92tc51B8nB5W_phKS9IWACp5kOmyylLqvoI6YN9IjK0muVSp8T9FP/exec";
+            // URL do Google Apps Script (substitua pelo seu)
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec";
             
             // Preencher dropdown de professores
             Object.keys(teacherEmails).forEach(teacherName => {
@@ -862,12 +861,7 @@
                 
                 // Consultar o Google Apps Script para obter alunos
                 fetch(`${SCRIPT_URL}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Falha ao carregar alunos');
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         if (data.status === "success") {
                             studentSelect.innerHTML = '<option value="">Selecione um aluno</option>';
@@ -884,7 +878,7 @@
                     })
                     .catch(error => {
                         console.error('Erro ao carregar alunos:', error);
-                        studentSelect.innerHTML = '<option value="">Erro ao carregar alunos. Tente novamente.</option>';
+                        studentSelect.innerHTML = '<option value="">Erro ao carregar alunos</option>';
                     });
             });
             
@@ -897,6 +891,8 @@
                 studentSelect.disabled = true;
                 successAlert.style.display = 'none';
                 errorAlert.style.display = 'none';
+                
+                // Resetar seleção de turma
                 classSelect.selectedIndex = 0;
             });
             
@@ -917,13 +913,12 @@
                 
                 // Verificar irregularidades selecionadas
                 const irregularities = [];
-                const irregularityCheckboxes = document.querySelectorAll('input[name="irregularity"]:checked');
+                const irregularityCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
                 irregularityCheckboxes.forEach(checkbox => {
                     irregularities.push(checkbox.value);
                 });
                 
                 if (!professor || !occurrenceDate || !student || !classInfo || !description || irregularities.length === 0) {
-                    errorMessage.textContent = 'Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma irregularidade.';
                     errorAlert.style.display = 'flex';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
@@ -947,12 +942,7 @@
                     },
                     body: JSON.stringify(data)
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Falha na rede ou no servidor');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
                         successAlert.style.display = 'flex';
@@ -973,12 +963,12 @@
                             successAlert.style.display = 'none';
                         }, 3000);
                     } else {
-                        throw new Error(data.message || 'Erro ao enviar os dados');
+                        throw new Error(data.message || 'Erro desconhecido');
                     }
                 })
                 .catch(error => {
                     console.error('Erro:', error);
-                    errorMessage.textContent = `Erro no envio: ${error.message}`;
+                    errorAlert.querySelector('p').textContent = `Erro no envio: ${error.message}`;
                     errorAlert.style.display = 'flex';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
@@ -986,20 +976,12 @@
             
             // Carregar estatísticas iniciais
             fetch(`${SCRIPT_URL}?action=getStats`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Falha ao carregar estatísticas');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
                         document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
                         document.getElementById('totalStudents').textContent = data.totalStudents;
                     }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar estatísticas:', error);
                 });
         });
     </script>
