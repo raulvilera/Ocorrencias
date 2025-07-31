@@ -833,7 +833,7 @@
             const professorSelect = document.getElementById('professor');
             
             // URL do Google Apps Script (substitua pelo seu)
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxC5bpswYEA2nKJRDp5R9bTdcr2K9FHsLGBD2fcOVrhukpEE_XEfAiXB5qjILzKYpoI/exec";
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec";
             
             // Preencher dropdown de professores
             Object.keys(teacherEmails).forEach(teacherName => {
@@ -860,7 +860,7 @@
                 }
                 
                 // Consultar o Google Apps Script para obter alunos
-                fetch(`${"https://script.google.com/macros/s/AKfycbxC5bpswYEA2nKJRDp5R9bTdcr2K9FHsLGBD2fcOVrhukpEE_XEfAiXB5qjILzKYpoI/exec"L}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
+                fetch(`${SCRIPT_URL}?action=getStudents&class=${encodeURIComponent(selectedClass)}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === "success") {
@@ -935,7 +935,7 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
-                fetch("https://script.google.com/macros/s/AKfycbxC5bpswYEA2nKJRDp5R9bTdcr2K9FHsLGBD2fcOVrhukpEE_XEfAiXB5qjILzKYpoI/exec"L, {
+                fetch(SCRIPT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -975,7 +975,7 @@
             });
             
             // Carregar estatísticas iniciais
-            fetch(`${"https://script.google.com/macros/s/AKfycbwbcrqkHDWJhASD2Xj6Y9QGEaBpTmciJR3V8Y93fdfEltU_tCV4WFhROOlCvlaxJ7sH/exec"L}?action=getStats`)
+            fetch(`${SCRIPT_URL}?action=getStats`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
