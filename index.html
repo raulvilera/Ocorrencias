@@ -835,22 +835,14 @@
             // URL do Google Apps Script (substitua pelo seu)
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec";
             
-           // Função para carregar professores
-    function loadProfessores() {
-        // Limpa o select antes de popular
-        professorSelect.innerHTML = '<option value="">Selecione seu nome</option>';
-        
-        // Adiciona cada professor ao dropdown
-        Object.keys(teacherEmails).forEach(teacherName => {
-            const option = document.createElement('option');
-            option.value = teacherName;
-            option.textContent = teacherName;
-            professorSelect.appendChild(option);
-        });
-    }
+            // Preencher dropdown de professores
+            Object.keys(teacherEmails).forEach(teacherName => {
+                const option = document.createElement('option');
+                option.value = teacherName;
+                option.textContent = teacherName;
+                professorSelect.appendChild(option);
+            });
             
-    // Chama a função para carregar professores quando a página carrega
-    loadProfessores();
             // Preencher data atual como padrão
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
@@ -943,21 +935,18 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
-                fetch("https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec", {
+                fetch(SCRIPT_URL, {
                     method: 'POST',
-                    method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    professor: professor,
-    occurrenceDate: occurrenceDate,
-    student: student,
-    classInfo: classInfo,
-    irregularities: irregularities, // Já deve ser um array
-    description: description
-  })
-})
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        successAlert.style.display = 'flex';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                         
                         // Atualizar estatísticas
                         document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
