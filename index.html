@@ -6,7 +6,6 @@
     <title>Sistema de Registro de Ocorrências Escolares</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* O CSS permanece inalterado */
         :root {
             --primary-color: #1a73e8;
             --primary-dark: #0d47a1;
@@ -507,7 +506,7 @@
                         <i class="fas fa-exclamation-circle"></i> 
                         <div>
                             <strong>Erro no preenchimento do formulário</strong>
-                            <p id="errorMessage">Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma irregularidade.</p>
+                            <p>Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma irregularidade.</p>
                         </div>
                     </div>
                     
@@ -829,13 +828,12 @@
             const clearBtn = document.getElementById('clearBtn');
             const successAlert = document.getElementById('successAlert');
             const errorAlert = document.getElementById('errorAlert');
-            const errorMessage = document.getElementById('errorMessage');
             const studentSelect = document.getElementById('student');
             const classSelect = document.getElementById('studentClass');
             const professorSelect = document.getElementById('professor');
             
             // URL do Google Apps Script (substitua pelo seu)
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyrC_SY3zwtus69drWkmRVQpSLXQdaY59SPpH6sMQBMLNl3kZQPJNBpGG12BE4VdPXu/exec";
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOEgwKhUTjO6QeipPW3n2bwEw4Ewdwr2t9aMokUEIq0gXOjGBG5Lk0IplPli2Oz3-L/exec";
             
             // Preencher dropdown de professores
             Object.keys(teacherEmails).forEach(teacherName => {
@@ -921,7 +919,6 @@
                 });
                 
                 if (!professor || !occurrenceDate || !student || !classInfo || !description || irregularities.length === 0) {
-                    errorMessage.textContent = "Por favor, preencha todos os campos obrigatórios e selecione pelo menos uma irregularidade";
                     errorAlert.style.display = 'flex';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
@@ -938,23 +935,14 @@
                 };
                 
                 // Enviar para o Google Sheets via Google Apps Script
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos timeout
-                
                 fetch(SCRIPT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data),
-                    signal: controller.signal
+                    body: JSON.stringify(data)
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
                         successAlert.style.display = 'flex';
@@ -980,12 +968,9 @@
                 })
                 .catch(error => {
                     console.error('Erro:', error);
-                    errorMessage.textContent = `Erro no envio: ${error.name === "AbortError" ? "Tempo excedido" : error.message}`;
+                    errorAlert.querySelector('p').textContent = `Erro no envio: ${error.message}`;
                     errorAlert.style.display = 'flex';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                })
-                .finally(() => {
-                    clearTimeout(timeoutId);
                 });
             });
             
@@ -997,8 +982,7 @@
                         document.getElementById('totalOccurrences').textContent = data.totalOccurrences;
                         document.getElementById('totalStudents').textContent = data.totalStudents;
                     }
-                })
-                .catch(error => console.error('Erro ao carregar estatísticas:', error));
+                });
         });
     </script>
 </body>
