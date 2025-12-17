@@ -1061,10 +1061,10 @@
         // ============================================================================
         // CONFIGURAÇÕES GLOBAIS
         // ============================================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySRalWfLwP-Ri--d7d4vEfxP7azZJPqXsrh4cTrVf7Bo-qrgVGejOrp8M646mxNJ8V/exec;
-        const AUTH_TOKEN = 'ocorr_escola_2025_token_7x9YF7bP9qR8T3wV2zX6yA8B4C7D';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/SUA_URL_DO_APPSSCRIPT/exec';
+        const AUTH_TOKEN = 'SEU_TOKEN_SECRETO_AQUI'; // DEVE SER IGUAL AO DO APPSCRIPT
         
-        // Credenciais do sistema
+        // Credenciais do sistema (LOGIN LOCAL)
         const CREDENCIAIS = {
             GESTAO: { 
                 email: 'gestao@escola.com', 
@@ -1087,7 +1087,7 @@
         let alunosSelecionados = [];
 
         // ============================================================================
-        // FUNÇÕES DE AUTENTICAÇÃO
+        // FUNÇÕES DE AUTENTICAÇÃO (LOGIN LOCAL)
         // ============================================================================
         
         /**
@@ -1156,7 +1156,7 @@
                 document.getElementById('area-professor').classList.remove('d-none');
             }
             
-            // Inicializar aplicação
+            // Inicializar aplicação (carregar dados do AppScript)
             inicializarAplicacao();
         }
         
@@ -1317,12 +1317,41 @@
 
             showNotification('info', 'Registrando ocorrência...');
 
-            // Simulação de registro (substituir pela chamada real ao AppScript)
-            setTimeout(() => {
-                showNotification('success', 'Ocorrência registrada com sucesso!');
-                limparFormularioGestao();
-                carregarHistoricoGestao();
-            }, 1500);
+            // Preparar payload para o AppScript
+            const payload = {
+                endpoint: 'create-occurrence',
+                sheet: 'BANCODEALUNOS', // SHEET_GESTAO
+                professor: professor,
+                turma: serie,
+                aluno: aluno,
+                disciplina: disciplina,
+                irregularidades: classificacao,
+                descricao: descricao
+            };
+
+            try {
+                const resp = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AUTH_TOKEN}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const j = await resp.json();
+
+                if (j && j.status === 'success') {
+                    showNotification('success', 'Ocorrência registrada com sucesso!');
+                    limparFormularioGestao();
+                    carregarHistoricoGestao();
+                } else {
+                    showNotification('error', j.message || 'Erro ao registrar!');
+                }
+            } catch (err) {
+                console.error('Erro:', err);
+                showNotification('error', 'Falha na comunicação com o servidor.');
+            }
         }
 
         /**
@@ -1330,39 +1359,29 @@
          */
         async function carregarHistoricoGestao() {
             try {
-                // Simulação de carregamento de dados
-                setTimeout(() => {
+                const resp = await fetch(`${SCRIPT_URL}?endpoint=occurrences&sheet=BANCODEALUNOS&token=${AUTH_TOKEN}`);
+                const j = await resp.json();
+                
+                if (j && j.status === 'success') {
                     const tbody = document.getElementById('tabelaHistoricoGestao');
-                    tbody.innerHTML = `
-                        <tr>
-                            <td>João Silva</td>
-                            <td>8º Ano A</td>
-                            <td>Maria Santos</td>
-                            <td>123456</td>
-                            <td>Matemática</td>
-                            <td>10/05/2025</td>
-                            <td><span class="badge badge-success">Disponível</span></td>
-                        </tr>
-                        <tr>
-                            <td>Ana Oliveira</td>
-                            <td>9º Ano B</td>
-                            <td>Carlos Mendes</td>
-                            <td>789012</td>
-                            <td>Português</td>
-                            <td>09/05/2025</td>
-                            <td><span class="badge badge-warning">Pendente</span></td>
-                        </tr>
-                        <tr>
-                            <td>Pedro Costa</td>
-                            <td>7º Ano C</td>
-                            <td>Fernanda Lima</td>
-                            <td>345678</td>
-                            <td>História</td>
-                            <td>08/05/2025</td>
-                            <td><span class="badge badge-success">Disponível</span></td>
-                        </tr>
-                    `;
-                }, 1000);
+                    tbody.innerHTML = '';
+                    
+                    j.occurrences.forEach(oc => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${oc.NOME || ''}</td>
+                            <td>${oc.SÉRIE || ''}</td>
+                            <td>${oc.PROFESSOR || ''}</td>
+                            <td>${oc.RA || ''}</td>
+                            <td>${oc.DISCIPLINA || ''}</td>
+                            <td>${new Date(oc['DATA DO REGISTRO/HORA']).toLocaleDateString() || ''}</td>
+                            <td>${oc['URL DO DOCUMENTO'] ? 
+                                `<a href="${oc['URL DO DOCUMENTO']}" target="_blank">📄</a>` : 
+                                'N/A'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
             } catch (err) {
                 console.error('Erro ao carregar histórico:', err);
                 showNotification('error', 'Erro ao carregar histórico de ocorrências.');
@@ -1439,7 +1458,7 @@
         }
         
         /**
-         * Registra ocorrência do professor
+         * Registra ocorrência do professor (para múltiplos alunos)
          */
         async function registrarOcorrenciaProfessor() {
             const professor = document.getElementById('professor_select').value;
@@ -1456,12 +1475,52 @@
 
             showNotification('info', `Registrando ${alunosSelecionados.length} ocorrência(s)...`);
 
-            // Simulação de registro (substituir pela chamada real ao AppScript)
-            setTimeout(() => {
+            // Para cada aluno selecionado, enviar uma requisição individual
+            const promises = alunosSelecionados.map(async (alunoDisplay) => {
+                // Extrair nome e RA do formato "Nome (RA)"
+                const match = alunoDisplay.match(/^(.*) \((.*)\)$/);
+                const nome = match ? match[1].trim() : alunoDisplay;
+                const ra = match ? match[2].trim() : '';
+
+                const payload = {
+                    endpoint: 'create-occurrence',
+                    sheet: 'OCORRENCIASDOSPROFESSORES', // SHEET_PROFESSOR_LOGS
+                    date: dataOcc,
+                    professor: professor,
+                    turma: turma,
+                    aluno: nome,
+                    disciplina: disciplina,
+                    irregularidades: irregs.join(', '),
+                    descricao: descricao
+                };
+
+                try {
+                    const resp = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${AUTH_TOKEN}`
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    return await resp.json();
+                } catch (err) {
+                    console.error(`Erro ao registrar ocorrência para ${alunoDisplay}:`, err);
+                    return { status: 'error', message: 'Falha na comunicação' };
+                }
+            });
+
+            const results = await Promise.all(promises);
+            const allSuccess = results.every(r => r && r.status === 'success');
+
+            if (allSuccess) {
                 showNotification('success', `${alunosSelecionados.length} ocorrência(s) registradas com sucesso!`);
                 clearProfessorForm();
                 carregarHistoricoProfessor();
-            }, 2000);
+            } else {
+                const erros = results.filter(r => !r || r.status !== 'success').length;
+                showNotification('error', `${erros} ocorrência(s) falharam.`);
+            }
         }
         
         /**
@@ -1469,39 +1528,27 @@
          */
         async function carregarHistoricoProfessor() {
             try {
-                // Simulação de carregamento de dados
-                setTimeout(() => {
+                const resp = await fetch(`${SCRIPT_URL}?endpoint=occurrences&sheet=OCORRENCIASDOSPROFESSORES&token=${AUTH_TOKEN}`);
+                const j = await resp.json();
+                
+                if (j && j.status === 'success') {
                     const tbody = document.getElementById('tabelaHistoricoProfessor');
-                    tbody.innerHTML = `
-                        <tr>
-                            <td>10/05/2025</td>
-                            <td>Carlos Mendes</td>
-                            <td>9º Ano B</td>
-                            <td>Ana Oliveira</td>
-                            <td>789012</td>
-                            <td>Português</td>
-                            <td><span class="badge badge-warning">Atraso</span></td>
-                        </tr>
-                        <tr>
-                            <td>09/05/2025</td>
-                            <td>Maria Santos</td>
-                            <td>8º Ano A</td>
-                            <td>João Silva</td>
-                            <td>123456</td>
-                            <td>Matemática</td>
-                            <td><span class="badge badge-danger">Comportamento</span></td>
-                        </tr>
-                        <tr>
-                            <td>08/05/2025</td>
-                            <td>Fernanda Lima</td>
-                            <td>7º Ano C</td>
-                            <td>Pedro Costa</td>
-                            <td>345678</td>
-                            <td>História</td>
-                            <td><span class="badge badge-warning">Falta Material</span></td>
-                        </tr>
-                    `;
-                }, 1000);
+                    tbody.innerHTML = '';
+                    
+                    j.occurrences.forEach(oc => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${new Date(oc.DATA).toLocaleDateString() || ''}</td>
+                            <td>${oc.PROFESSOR || ''}</td>
+                            <td>${oc.TURMA || ''}</td>
+                            <td>${oc.ALUNO || ''}</td>
+                            <td>${oc.RA || ''}</td>
+                            <td>${oc.DISCIPLINA || ''}</td>
+                            <td>${oc.IRREGULARIDADES || ''}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
             } catch (err) {
                 console.error('Erro ao carregar histórico:', err);
                 showNotification('error', 'Erro ao carregar histórico de ocorrências.');
@@ -1509,97 +1556,91 @@
         }
 
         // ============================================================================
-        // FUNÇÕES DE CARREGAMENTO DINÂMICO
+        // FUNÇÕES DE CARREGAMENTO DINÂMICO (DO APPSSCRIPT)
         // ============================================================================
         
         /**
-         * Carrega turmas
+         * Carrega turmas do AppScript
          */
         async function carregarTurmas() {
             try {
-                // Simulação de carregamento de turmas
-                const turmas = [
-                    "6º Ano A", "6º Ano B", "6º Ano C", "6º Ano D", "6º Ano E", "6º Ano F",
-                    "7º Ano A", "7º Ano B", "7º Ano C", "7º Ano D", "7º Ano E", "7º Ano F",
-                    "8º Ano A", "8º Ano B", "8º Ano C", "8º Ano D", "8º Ano E",
-                    "9º Ano A", "9º Ano B", "9º Ano C", "9º Ano D",
-                    "1ª Série A", "1ª Série B", "1ª Série C", "1ª Série D", "1ª Série E", "1ª Série F", "1ª Série G", "1ª Série H", "1ª Série I",
-                    "2ª Série A", "2ª Série B", "2ª Série C", "2ª Série D", "2ª Série E", "2ª Série F", "2ª Série G", "2ª Série H",
-                    "3ª Série A", "3ª Série B", "3ª Série C", "3ª Série D", "3ª Série E", "3ª Série F", "3ª Série G"
-                ];
+                const resp = await fetch(`${SCRIPT_URL}?endpoint=classes&token=${AUTH_TOKEN}`);
+                const j = await resp.json();
                 
-                // Carregar apenas para o tipo de usuário logado
-                if (usuarioLogado.tipo === 'gestao') {
-                    const select = document.getElementById('serie_gestao');
-                    if (select) {
-                        select.innerHTML = '<option value="">Selecione uma turma</option>';
-                        turmas.forEach(turma => {
-                            const option = document.createElement('option');
-                            option.value = turma;
-                            option.textContent = turma;
-                            select.appendChild(option);
-                        });
-                    }
-                } else {
-                    const select = document.getElementById('turma_select');
-                    if (select) {
-                        select.innerHTML = '<option value="">Selecione a turma</option>';
-                        turmas.forEach(turma => {
-                            const option = document.createElement('option');
-                            option.value = turma;
-                            option.textContent = turma;
-                            select.appendChild(option);
-                        });
+                if (j && j.status === 'success') {
+                    // Carregar apenas para o tipo de usuário logado
+                    if (usuarioLogado.tipo === 'gestao') {
+                        const select = document.getElementById('serie_gestao');
+                        if (select) {
+                            select.innerHTML = '<option value="">Selecione uma turma</option>';
+                            j.classes.forEach(turma => {
+                                const option = document.createElement('option');
+                                option.value = turma;
+                                option.textContent = turma;
+                                select.appendChild(option);
+                            });
+                        }
+                    } else {
+                        const select = document.getElementById('turma_select');
+                        if (select) {
+                            select.innerHTML = '<option value="">Selecione a turma</option>';
+                            j.classes.forEach(turma => {
+                                const option = document.createElement('option');
+                                option.value = turma;
+                                option.textContent = turma;
+                                select.appendChild(option);
+                            });
+                        }
                     }
                 }
             } catch (err) {
                 console.error('Erro ao carregar turmas:', err);
+                showNotification('error', 'Erro ao carregar lista de turmas.');
             }
         }
         
         /**
-         * Carrega professores
+         * Carrega professores do AppScript
          */
         async function carregarProfessores() {
             try {
-                // Simulação de carregamento de professores
-                const professores = [
-                    "Alex Luth Pereira Maranhão", "Alexsandra Paula Varella de Souza", "Alison Vasconcelos Beserra",
-                    "Amauri Teodoro de Oliveira", "Ana Paula dos Santos", "Andreia dos Santos Freitas",
-                    "Andreia Madureira Reis", "Antônio Carlos de Oliveira", "Antônio Rams de Araújo"
-                ];
+                const resp = await fetch(`${SCRIPT_URL}?endpoint=teachers&token=${AUTH_TOKEN}`);
+                const j = await resp.json();
                 
-                // Carregar apenas para o tipo de usuário logado
-                if (usuarioLogado.tipo === 'gestao') {
-                    const select = document.getElementById('professor_gestao');
-                    if (select) {
-                        select.innerHTML = '<option value="">Selecione o professor</option>';
-                        professores.forEach(prof => {
-                            const option = document.createElement('option');
-                            option.value = prof;
-                            option.textContent = prof;
-                            select.appendChild(option);
-                        });
-                    }
-                } else {
-                    const select = document.getElementById('professor_select');
-                    if (select) {
-                        select.innerHTML = '<option value="">Selecione o professor</option>';
-                        professores.forEach(prof => {
-                            const option = document.createElement('option');
-                            option.value = prof;
-                            option.textContent = prof;
-                            select.appendChild(option);
-                        });
+                if (j && j.status === 'success') {
+                    // Carregar apenas para o tipo de usuário logado
+                    if (usuarioLogado.tipo === 'gestao') {
+                        const select = document.getElementById('professor_gestao');
+                        if (select) {
+                            select.innerHTML = '<option value="">Selecione o professor</option>';
+                            j.teachers.forEach(prof => {
+                                const option = document.createElement('option');
+                                option.value = prof;
+                                option.textContent = prof;
+                                select.appendChild(option);
+                            });
+                        }
+                    } else {
+                        const select = document.getElementById('professor_select');
+                        if (select) {
+                            select.innerHTML = '<option value="">Selecione o professor</option>';
+                            j.teachers.forEach(prof => {
+                                const option = document.createElement('option');
+                                option.value = prof;
+                                option.textContent = prof;
+                                select.appendChild(option);
+                            });
+                        }
                     }
                 }
             } catch (err) {
                 console.error('Erro ao carregar professores:', err);
+                showNotification('error', 'Erro ao carregar lista de professores.');
             }
         }
         
         /**
-         * Carrega alunos para gestão
+         * Carrega alunos para gestão (do AppScript)
          */
         async function carregarAlunosPorTurmaGestao(turma) {
             if (!turma) {
@@ -1608,24 +1649,20 @@
             }
             
             try {
-                // Simulação de carregamento de alunos
-                const alunos = [
-                    { nome: "João Silva", ra: "123456" },
-                    { nome: "Maria Santos", ra: "234567" },
-                    { nome: "Pedro Costa", ra: "345678" },
-                    { nome: "Ana Oliveira", ra: "456789" },
-                    { nome: "Carlos Mendes", ra: "567890" }
-                ];
+                const resp = await fetch(`${SCRIPT_URL}?endpoint=students&turma=${encodeURIComponent(turma)}&token=${AUTH_TOKEN}`);
+                const j = await resp.json();
                 
-                const select = document.getElementById('aluno_gestao');
-                select.innerHTML = '<option value="">Selecione um aluno</option>';
-                
-                alunos.forEach(aluno => {
-                    const option = document.createElement('option');
-                    option.value = aluno.ra;
-                    option.textContent = aluno.nome;
-                    select.appendChild(option);
-                });
+                if (j && j.status === 'success') {
+                    const select = document.getElementById('aluno_gestao');
+                    select.innerHTML = '<option value="">Selecione um aluno</option>';
+                    
+                    j.studentsList.forEach(aluno => {
+                        const option = document.createElement('option');
+                        option.value = aluno.ra || '';
+                        option.textContent = aluno.nome;
+                        select.appendChild(option);
+                    });
+                }
             } catch (err) {
                 console.error('Erro ao carregar alunos:', err);
                 showNotification('error', 'Erro ao carregar lista de alunos.');
@@ -1633,7 +1670,7 @@
         }
         
         /**
-         * Carrega alunos para professor
+         * Carrega alunos para professor (do AppScript)
          */
         async function carregarAlunosPorTurmaProfessor(turma) {
             const container = document.getElementById('alunos_checkbox_container');
@@ -1643,47 +1680,40 @@
             }
             
             try {
-                // Simulação de carregamento de alunos
-                const alunos = [
-                    { nome: "João Silva", ra: "123456" },
-                    { nome: "Maria Santos", ra: "234567" },
-                    { nome: "Pedro Costa", ra: "345678" },
-                    { nome: "Ana Oliveira", ra: "456789" },
-                    { nome: "Carlos Mendes", ra: "567890" },
-                    { nome: "Fernanda Lima", ra: "678901" },
-                    { nome: "Ricardo Souza", ra: "789012" },
-                    { nome: "Juliana Almeida", ra: "890123" }
-                ];
+                const resp = await fetch(`${SCRIPT_URL}?endpoint=students&turma=${encodeURIComponent(turma)}&token=${AUTH_TOKEN}`);
+                const j = await resp.json();
                 
-                container.innerHTML = '';
-                
-                alunos.forEach(aluno => {
-                    const alunoDisplay = `${aluno.nome} (${aluno.ra})`;
+                if (j && j.status === 'success') {
+                    container.innerHTML = '';
                     
-                    const div = document.createElement('div');
-                    div.className = 'checkbox-item';
-                    
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = `aluno_${aluno.ra}`;
-                    checkbox.value = alunoDisplay;
-                    checkbox.onchange = function() {
-                        if (this.checked) {
-                            adicionarAlunoSelecionado(alunoDisplay);
-                        } else {
-                            removerAlunoSelecionado(alunoDisplay);
-                        }
-                    };
-                    
-                    const label = document.createElement('label');
-                    label.htmlFor = checkbox.id;
-                    label.textContent = alunoDisplay;
-                    label.style.cursor = 'pointer';
-                    
-                    div.appendChild(checkbox);
-                    div.appendChild(label);
-                    container.appendChild(div);
-                });
+                    j.studentsList.forEach(aluno => {
+                        const alunoDisplay = `${aluno.nome} (${aluno.ra || 'N/A'})`;
+                        
+                        const div = document.createElement('div');
+                        div.className = 'checkbox-item';
+                        
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = `aluno_${aluno.ra || aluno.nome.replace(/\s/g, '_')}`;
+                        checkbox.value = alunoDisplay;
+                        checkbox.onchange = function() {
+                            if (this.checked) {
+                                adicionarAlunoSelecionado(alunoDisplay);
+                            } else {
+                                removerAlunoSelecionado(alunoDisplay);
+                            }
+                        };
+                        
+                        const label = document.createElement('label');
+                        label.htmlFor = checkbox.id;
+                        label.textContent = alunoDisplay;
+                        label.style.cursor = 'pointer';
+                        
+                        div.appendChild(checkbox);
+                        div.appendChild(label);
+                        container.appendChild(div);
+                    });
+                }
             } catch (err) {
                 console.error('Erro ao carregar alunos:', err);
                 showNotification('error', 'Erro ao carregar lista de alunos.');
@@ -1708,7 +1738,7 @@
                 document.getElementById('data_prof').max = hoje;
             }
             
-            // Carregar dados iniciais
+            // Carregar dados iniciais do AppScript
             carregarTurmas();
             carregarProfessores();
             
@@ -1717,6 +1747,8 @@
             } else {
                 carregarHistoricoProfessor();
             }
+            
+            showNotification('success', `Bem-vindo(a) ao sistema de ocorrências!`);
         }
 
         // ============================================================================
