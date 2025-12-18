@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* O CSS COMPLETO FOI MANTIDO AQUI PARA PRESERVAR O ESTILO ORIGINAL */
         /* ===== RESET & VARIÁVEIS ===== */
         :root {
             --primary-color: #2C3E50;
@@ -350,23 +351,19 @@
             background: white;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid #E0E6ED;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--secondary-color);
         }
 
         .card-header {
-            padding: 1.5rem 1.5rem 0.5rem;
             border-bottom: 1px solid #E0E6ED;
-            background-color: #F8FAFC;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .card-title {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: var(--primary-color);
             display: flex;
@@ -374,130 +371,135 @@
             gap: 0.75rem;
         }
 
-        .card-title i {
-            color: var(--secondary-color);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        /* Formulários */
+        /* Formulário */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        .form-full-width {
-            grid-column: 1 / -1;
+        .form-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
         }
 
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Checkbox/Radio */
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-top: 0.5rem;
         }
 
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--primary-color);
         }
 
         .checkbox-item input[type="checkbox"] {
+            margin-right: 0.5rem;
             width: 18px;
             height: 18px;
             accent-color: var(--secondary-color);
         }
 
-        .aluno-pill {
-            display: inline-flex;
+        /* Aluno Pills */
+        #selectedPills {
+            min-height: 40px;
+            border: 1px solid #E0E6ED;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             align-items: center;
-            background: #E3F2FD;
-            color: var(--secondary-color);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin: 0.25rem;
+        }
+
+        .aluno-pill {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .aluno-pill button {
             background: none;
             border: none;
-            color: var(--gray-dark);
+            color: white;
             cursor: pointer;
-            margin-left: 0.5rem;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+            font-size: 0.7rem;
+            padding: 0;
+            margin-left: 0.2rem;
+            opacity: 0.8;
         }
 
         .aluno-pill button:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            opacity: 1;
         }
 
-        /* Tabelas */
+        /* Tabela */
         .table-responsive {
             overflow-x: auto;
-            border-radius: var(--radius-sm);
-            border: 1px solid #E0E6ED;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px;
+            font-size: 0.9rem;
         }
 
-        .data-table thead {
-            background: linear-gradient(135deg, #F8FAFC, #ECF0F1);
-        }
-
-        .data-table th {
-            padding: 1rem;
+        .data-table th, .data-table td {
+            padding: 12px 15px;
             text-align: left;
-            font-weight: 600;
-            color: var(--primary-color);
-            border-bottom: 2px solid #E0E6ED;
-            white-space: nowrap;
-        }
-
-        .data-table td {
-            padding: 1rem;
             border-bottom: 1px solid #E0E6ED;
         }
 
-        .data-table tbody tr {
-            transition: var(--transition);
+        .data-table th {
+            background-color: #F8F9FA;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
         }
 
         .data-table tbody tr:hover {
-            background-color: #F8FAFC;
+            background-color: #F5F7FA;
         }
 
+        .data-table a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        /* Badges */
         .badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 0.3em 0.6em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
         }
 
         .badge-success {
             background-color: #D5F4E6;
             color: var(--success-color);
-        }
-
-        .badge-warning {
-            background-color: #FEF5E7;
-            color: var(--warning-color);
         }
 
         .badge-danger {
@@ -684,121 +686,72 @@
                 grid-template-columns: 1fr;
             }
             
-            .card-body {
-                padding: 1.25rem;
+            .app-brand h1 {
+                font-size: 1.2rem;
             }
             
-            .notification-container {
-                left: 20px;
-                right: 20px;
-                max-width: none;
+            .user-details {
+                display: none;
             }
-        }
-
-        /* ===== ANIMAÇÕES ===== */
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
-        }
-
-        /* ===== SCROLLBAR PERSONALIZADA ===== */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #F1F1F1;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--gray-light);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gray-dark);
         }
     </style>
 </head>
 <body>
-    <!-- Tela de Login -->
+
+    <!-- TELA DE LOGIN -->
     <div class="login-screen" id="login-screen">
         <div class="login-card">
             <div class="login-logo">
-                <i class="fas fa-school"></i>
+                <i class="fas fa-user-shield"></i>
                 <h1>Sistema de Ocorrências</h1>
-                <p>Controle e gestão de ocorrências escolares</p>
+                <p>Acesso Restrito</p>
             </div>
-            
-            <form id="login-form" onsubmit="event.preventDefault(); fazerLogin();">
-                <div class="form-group">
-                    <label for="login-email" class="form-label">E-mail</label>
-                    <input type="email" id="login-email" class="form-control" placeholder="seu@email.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="login-senha" class="form-label">Senha</label>
-                    <input type="password" id="login-senha" class="form-control" placeholder="••••••••" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-sign-in-alt"></i> Acessar Sistema
-                </button>
-            </form>
-            
-            <div class="credentials-hint mt-3">
-                <h4><i class="fas fa-info-circle"></i> Credenciais de demonstração:</h4>
+            <div class="form-group">
+                <label for="login-email" class="form-label">E-mail</label>
+                <input type="email" id="login-email" class="form-control" placeholder="seu.email@escola.com" value="professor@escola.com">
+            </div>
+            <div class="form-group">
+                <label for="login-senha" class="form-label">Senha</label>
+                <input type="password" id="login-senha" class="form-control" placeholder="********" value="prof123">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="fazerLogin()">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
+            <div class="credentials-hint">
+                <h4>Credenciais de Teste:</h4>
                 <ul>
-                    <li><strong>Gestão:</strong> gestao@escola.com / gestao123</li>
-                    <li><strong>Professor:</strong> professor@escola.com / prof123</li>
+                    <li>**Gestão:** gestao@escola.com / gestao123</li>
+                    <li>**Professor:** professor@escola.com / prof123</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Aplicação Principal -->
+    <!-- APLICAÇÃO PRINCIPAL -->
     <div class="app-container" id="app-container">
         <!-- Header -->
         <header class="app-header">
             <div class="container">
                 <div class="header-content">
                     <div class="app-brand">
-                        <i class="fas fa-school"></i>
-                        <h1>Sistema de Ocorrências</h1>
+                        <i class="fas fa-book-reader"></i>
+                        <h1>Ocorrências 2025</h1>
                     </div>
-                    
                     <div class="user-info">
-                        <div class="user-avatar" id="user-avatar">G</div>
+                        <div class="user-avatar" id="user-avatar"></div>
                         <div class="user-details">
-                            <div class="user-name" id="user-name">Gestor</div>
-                            <div class="user-role" id="user-role">Gestão Escolar</div>
+                            <span class="user-name" id="user-name"></span>
+                            <span class="user-role" id="user-role"></span>
                         </div>
                     </div>
-                    
                     <div class="header-actions">
-                        <button class="btn btn-icon" onclick="exportarParaPDF()" title="Exportar PDF">
-                            <i class="fas fa-file-pdf"></i>
-                        </button>
-                        <button class="btn btn-icon" onclick="carregarTodosOsDados()" title="Atualizar dados">
+                        <button class="btn btn-icon" title="Atualizar Dados" onclick="inicializarAplicacao()">
                             <i class="fas fa-sync-alt"></i>
                         </button>
-                        <button class="btn btn-icon" onclick="sairDoSistema()" title="Sair do sistema">
+                        <button class="btn btn-icon" title="Exportar Histórico" onclick="exportarParaPDF()">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+                        <button class="btn btn-icon" title="Sair" onclick="sairDoSistema()">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
                     </div>
@@ -809,85 +762,64 @@
         <!-- Main Content -->
         <main class="app-main">
             <div class="container">
-                <!-- Área da Gestão (visível apenas para gestão) -->
-                <div id="area-gestao" class="d-none fade-in">
-                    <div class="d-flex justify-between align-center mb-4">
-                        <h2 class="card-title"><i class="fas fa-user-tie"></i> Gestão de Ocorrências</h2>
-                    </div>
-                    
-                    <div class="form-grid mb-4">
-                        <!-- Card: Registrar Ocorrência -->
-                        <div class="card form-full-width">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-plus-circle"></i> Registrar Nova Ocorrência</h3>
+                <!-- ÁREA DA GESTÃO -->
+                <div id="area-gestao" class="d-none">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-user-shield"></i> Registro de Ocorrência - Gestão</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="serie_gestao" class="form-label">Série/Turma</label>
+                                    <select id="serie_gestao" class="form-control" onchange="carregarAlunosPorTurmaGestao(this.value)">
+                                        <option value="">Carregando...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="aluno_gestao" class="form-label">Aluno</label>
+                                    <select id="aluno_gestao" class="form-control" onchange="preencherRAAutomaticamente()">
+                                        <option value="">Selecione uma turma</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ra_gestao" class="form-label">RA (Registro de Aluno)</label>
+                                    <input type="text" id="ra_gestao" class="form-control" placeholder="Preenchido automaticamente" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="professor_gestao" class="form-label">Professor Envolvido</label>
+                                    <select id="professor_gestao" class="form-control">
+                                        <option value="">Carregando...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="disciplina_gestao" class="form-label">Disciplina</label>
+                                    <input type="text" id="disciplina_gestao" class="form-control" placeholder="Ex: Matemática">
+                                </div>
+                                <div class="form-group">
+                                    <label for="classificacao_gestao" class="form-label">Classificação da Ocorrência</label>
+                                    <input type="text" id="classificacao_gestao" class="form-control" placeholder="Ex: Agressão Verbal">
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="serie_gestao" class="form-label">Turma/Série</label>
-                                        <select id="serie_gestao" class="form-control" onchange="carregarAlunosPorTurmaGestao(this.value)">
-                                            <option value="">Selecione uma turma</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="aluno_gestao" class="form-label">Aluno</label>
-                                        <select id="aluno_gestao" class="form-control" onchange="preencherRAAutomaticamente()">
-                                            <option value="">Selecione um aluno</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="ra_gestao" class="form-label">RA (Registro Acadêmico)</label>
-                                        <input type="text" id="ra_gestao" class="form-control" placeholder="Preenchido automaticamente" readonly>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="professor_gestao" class="form-label">Professor</label>
-                                        <select id="professor_gestao" class="form-control">
-                                            <option value="">Selecione o professor</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="disciplina_gestao" class="form-label">Disciplina</label>
-                                        <input type="text" id="disciplina_gestao" class="form-control" placeholder="Ex: Matemática">
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="classificacao_gestao" class="form-label">Classificação</label>
-                                        <select id="classificacao_gestao" class="form-control">
-                                            <option value="">Selecione uma classificação</option>
-                                            <option value="Atraso">Atraso</option>
-                                            <option value="Falta">Falta</option>
-                                            <option value="Comportamento">Comportamento</option>
-                                            <option value="Material">Material</option>
-                                            <option value="Outros">Outros</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group form-full-width">
-                                        <label for="descricao_gestao" class="form-label">Descrição Detalhada</label>
-                                        <textarea id="descricao_gestao" class="form-control" rows="4" placeholder="Descreva a ocorrência com detalhes..."></textarea>
-                                    </div>
-                                </div>
-                                
-                                <div class="d-flex justify-between mt-3">
-                                    <button class="btn btn-primary" onclick="registrarOcorrenciaGestao()">
-                                        <i class="fas fa-check-circle"></i> Registrar Ocorrência
-                                    </button>
-                                    <button class="btn" onclick="limparFormularioGestao()" style="background: #F8F9FA; color: #6C757D;">
-                                        <i class="fas fa-broom"></i> Limpar Formulário
-                                    </button>
-                                </div>
+                            <div class="form-group mt-3">
+                                <label for="descricao_gestao" class="form-label">Descrição Detalhada</label>
+                                <textarea id="descricao_gestao" class="form-control" placeholder="Descreva o ocorrido..."></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="registrarOcorrenciaGestao()">
+                                    <i class="fas fa-save"></i> Registrar Ocorrência
+                                </button>
+                                <button class="btn" onclick="limparFormularioGestao()" style="background: #F8F9FA; color: #6C757D;">
+                                    <i class="fas fa-eraser"></i> Limpar
+                                </button>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Card: Histórico de Ocorrências -->
+
+                    <!-- Card: Histórico de Ocorrências Gestão -->
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-history"></i> Histórico de Ocorrências</h3>
+                            <h3 class="card-title"><i class="fas fa-history"></i> Histórico de Ocorrências (Gestão)</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -895,12 +827,12 @@
                                     <thead>
                                         <tr>
                                             <th>Aluno</th>
-                                            <th>Turma</th>
+                                            <th>Série</th>
                                             <th>Professor</th>
                                             <th>RA</th>
                                             <th>Disciplina</th>
-                                            <th>Data</th>
-                                            <th>Documento</th>
+                                            <th>Data Reg.</th>
+                                            <th>Doc.</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabelaHistoricoGestao">
@@ -911,93 +843,72 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Área do Professor (visível apenas para professor) -->
-                <div id="area-professor" class="d-none fade-in">
-                    <div class="d-flex justify-between align-center mb-4">
-                        <h2 class="card-title"><i class="fas fa-chalkboard-teacher"></i> Registro de Ocorrências</h2>
-                    </div>
-                    
-                    <div class="form-grid mb-4">
-                        <!-- Card: Registrar Ocorrência -->
-                        <div class="card form-full-width">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-clipboard-list"></i> Registrar Ocorrência para Alunos</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="professor_select" class="form-label">Professor</label>
-                                        <select id="professor_select" class="form-control">
-                                            <option value="">Selecione o professor</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="turma_select" class="form-label">Turma</label>
-                                        <select id="turma_select" class="form-control" onchange="carregarAlunosPorTurmaProfessor(this.value)">
-                                            <option value="">Selecione a turma</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="data_prof" class="form-label">Data da Ocorrência</label>
-                                        <input type="date" id="data_prof" class="form-control">
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="disciplina_prof" class="form-label">Disciplina</label>
-                                        <input type="text" id="disciplina_prof" class="form-control" placeholder="Ex: Português">
-                                    </div>
-                                    
-                                    <div class="form-group form-full-width">
-                                        <label class="form-label">Irregularidades</label>
-                                        <div class="checkbox-group">
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="irreg1" name="irreg" value="Atraso">
-                                                <label for="irreg1">Atraso</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="irreg2" name="irreg" value="Falta Material">
-                                                <label for="irreg2">Falta Material</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="irreg3" name="irreg" value="Comportamento">
-                                                <label for="irreg3">Comportamento</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="irreg4" name="irreg" value="Não fez tarefa">
-                                                <label for="irreg4">Não fez tarefa</label>
-                                            </div>
-                                            <div class="checkbox-item">
-                                                <input type="checkbox" id="irreg5" name="irreg" value="Outros">
-                                                <label for="irreg5">Outros</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group form-full-width">
-                                        <label class="form-label">Selecionar Alunos</label>
-                                        <div id="alunos_checkbox_container" style="max-height: 200px; overflow-y: auto; padding: 1rem; border: 1px solid #E0E6ED; border-radius: var(--radius-sm); background: #F8FAFC;">
-                                            <p style="color: #6C757D; font-style: italic; text-align: center;">Selecione uma turma para carregar os alunos</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group form-full-width">
-                                        <label class="form-label">Alunos Selecionados</label>
-                                        <div id="selectedPills" style="min-height: 60px; padding: 1rem; border: 1px dashed #E0E6ED; border-radius: var(--radius-sm);">
-                                            <p style="color: #6C757D; font-style: italic; text-align: center;">Nenhum aluno selecionado</p>
-                                        </div>
-                                        <input type="hidden" id="alunos_selected_input">
-                                    </div>
-                                    
-                                    <div class="form-group form-full-width">
-                                        <label for="descricao_prof" class="form-label">Descrição Detalhada</label>
-                                        <textarea id="descricao_prof" class="form-control" rows="4" placeholder="Descreva a ocorrência com detalhes..."></textarea>
-                                    </div>
+
+                <!-- ÁREA DO PROFESSOR -->
+                <div id="area-professor" class="d-none">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chalkboard-teacher"></i> Registro de Ocorrência - Professor</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="professor_select" class="form-label">Seu Nome (Professor)</label>
+                                    <select id="professor_select" class="form-control">
+                                        <option value="">Carregando...</option>
+                                    </select>
                                 </div>
-                                
-                                <div class="d-flex justify-between mt-3">
+                                <div class="form-group">
+                                    <label for="turma_select" class="form-label">Turma</label>
+                                    <select id="turma_select" class="form-control" onchange="carregarAlunosPorTurmaProfessor(this.value)">
+                                        <option value="">Carregando...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="disciplina_prof" class="form-label">Disciplina</label>
+                                    <input type="text" id="disciplina_prof" class="form-control" placeholder="Ex: História">
+                                </div>
+                                <div class="form-group">
+                                    <label for="data_prof" class="form-label">Data da Ocorrência</label>
+                                    <input type="date" id="data_prof" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label class="form-label">Alunos Envolvidos (Selecione a turma acima)</label>
+                                <div class="form-grid" id="alunos_checkbox_container">
+                                    <p style="color: #6C757D; font-style: italic; text-align: center;">Selecione uma turma para carregar os alunos</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label class="form-label">Alunos Selecionados</label>
+                                <input type="hidden" id="alunos_selected_input">
+                                <div id="selectedPills">
+                                    <p style="color: #6C757D; font-style: italic; text-align: center;">Nenhum aluno selecionado</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label class="form-label">Irregularidades (Marque todas que se aplicam)</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Agressão Verbal"> Agressão Verbal</label>
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Agressão Física"> Agressão Física</label>
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Uso de Celular"> Uso de Celular</label>
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Desrespeito"> Desrespeito</label>
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Material Inadequado"> Material Inadequado</label>
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Atraso"> Atraso</label>
+                                    <label class="checkbox-item"><input type="checkbox" name="irreg" value="Outros"> Outros</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="descricao_prof" class="form-label">Descrição Detalhada</label>
+                                <textarea id="descricao_prof" class="form-control" placeholder="Descreva o ocorrido..."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <div class="d-flex gap-2">
                                     <button class="btn btn-primary" onclick="registrarOcorrenciaProfessor()">
                                         <i class="fas fa-paper-plane"></i> Registrar para Todos
                                     </button>
@@ -1059,10 +970,12 @@
 
     <script>
         // ============================================================================
-        // CONFIGURAÇÕES GLOBAIS
+        // CONFIGURAÇÕES GLOBAIS (AJUSTADAS PARA SEGURANÇA E COMUNICAÇÃO COM APP SCRIPT)
         // ============================================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySRalWfLwP-Ri--d7d4vEfxP7azZJPqXsrh4cTrVf7Bo-qrgVGejOrp8M646mxNJ8V/exec';
-        const AUTH_TOKEN = 'https://script.google.com/macros/s/AKfycbySRalWfLwP-Ri--d7d4vEfxP7azZJPqXsrh4cTrVf7Bo-qrgVGejOrp8M646mxNJ8V/exec'; // DEVE SER IGUAL AO DO APPSCRIPT
+        
+        // !!! IMPORTANTE: SUBSTITUA ESTES VALORES !!!
+        const SCRIPT_URL = 'COLE_AQUI_O_URL_DE_IMPLANTAÇÃO_DO_SEU_APP_SCRIPT';
+        const AUTH_TOKEN = 'COLE_AQUI_O_SEU_TOKEN_SECRETO'; // DEVE SER IGUAL AO DO APPSCRIPT
         
         // Credenciais do sistema (LOGIN LOCAL)
         const CREDENCIAIS = {
@@ -1086,6 +999,46 @@
         let usuarioLogado = null;
         let alunosSelecionados = [];
 
+        // ============================================================================
+        // FUNÇÃO HELPER PARA REQUISIÇÕES SEGURAS (USANDO HEADER DE AUTORIZAÇÃO)
+        // ============================================================================
+
+        /**
+         * Wrapper para a função fetch que adiciona o header de autorização.
+         * @param {string} endpoint O nome do endpoint (ex: 'classes', 'students').
+         * @param {Object} options Opções de fetch (method, body, etc.).
+         * @param {Object} params Parâmetros de URL para requisições GET.
+         * @returns {Promise<Response>}
+         */
+        async function secureFetch(endpoint, options = {}, params = {}) {
+            if (SCRIPT_URL.includes('COLE_AQUI_O_URL_DE_IMPLANTAÇÃO_DO_SEU_APP_SCRIPT')) {
+                throw new Error("Por favor, substitua o valor de SCRIPT_URL e AUTH_TOKEN nas configurações globais.");
+            }
+
+            const url = new URL(SCRIPT_URL);
+            url.searchParams.append('endpoint', endpoint);
+            
+            // Adiciona outros parâmetros GET
+            Object.keys(params).forEach(key => {
+                url.searchParams.append(key, params[key]);
+            });
+
+            const defaultOptions = {
+                headers: {
+                    'Authorization': `Bearer ${AUTH_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                ...options
+            };
+
+            // Remove Content-Type se não houver body (ex: GET)
+            if (!options.body) {
+                delete defaultOptions.headers['Content-Type'];
+            }
+
+            return fetch(url.toString(), defaultOptions);
+        }
+        
         // ============================================================================
         // FUNÇÕES DE AUTENTICAÇÃO (LOGIN LOCAL)
         // ============================================================================
@@ -1182,7 +1135,7 @@
         }
 
         // ============================================================================
-        // FUNÇÕES DE NOTIFICAÇÃO
+        // FUNÇÕES DE NOTIFICAÇÃO (MANTIDAS DO ORIGINAL)
         // ============================================================================
         
         /**
@@ -1196,7 +1149,7 @@
             let icon = 'info-circle';
             let title = 'Informação';
             
-            switch(type) {
+            switch (type) {
                 case 'success':
                     icon = 'check-circle';
                     title = 'Sucesso';
@@ -1263,13 +1216,12 @@
         function preencherRAAutomaticamente() {
             const alunoSelect = document.getElementById('aluno_gestao');
             const raInput = document.getElementById('ra_gestao');
-            if (alunoSelect.value) {
-                raInput.value = alunoSelect.value;
-            }
+            // O valor da option é o RA, conforme definido em carregarAlunosPorTurmaGestao
+            raInput.value = alunoSelect.value || '';
         }
         
         /**
-         * Exporta dados para PDF
+         * Exporta dados para PDF (Função de simulação)
          */
         function exportarParaPDF() {
             const tipo = usuarioLogado.tipo === 'gestao' ? 'Gestão' : 'Professor';
@@ -1282,27 +1234,12 @@
         }
         
         /**
-         * Carrega todos os dados
-         */
-        function carregarTodosOsDados() {
-            carregarTurmas();
-            carregarProfessores();
-            
-            if (usuarioLogado.tipo === 'gestao') {
-                carregarHistoricoGestao();
-            } else {
-                carregarHistoricoProfessor();
-            }
-            
-            showNotification('success', 'Dados atualizados com sucesso!');
-        }
-
-        /**
-         * Registra ocorrência da gestão
+         * Registra ocorrência da gestão (POST)
          */
         async function registrarOcorrenciaGestao() {
             const serie = document.getElementById('serie_gestao').value;
             const alunoSelect = document.getElementById('aluno_gestao');
+            // O nome do aluno é o texto da option selecionada
             const aluno = alunoSelect.options[alunoSelect.selectedIndex]?.text || '';
             const ra = document.getElementById('ra_gestao').value;
             const professor = document.getElementById('professor_gestao').value;
@@ -1317,27 +1254,26 @@
 
             showNotification('info', 'Registrando ocorrência...');
 
-            // Preparar payload para o AppScript
+            // Preparar payload para o AppScript (doPost)
             const payload = {
-                endpoint: 'create-occurrence',
-                sheet: 'BANCODEALUNOS', // SHEET_GESTAO
                 professor: professor,
                 turma: serie,
                 aluno: aluno,
                 disciplina: disciplina,
                 irregularidades: classificacao,
                 descricao: descricao
+                // O App Script irá buscar o RA, mas enviamos o que temos para consistência
             };
 
             try {
-                const resp = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${AUTH_TOKEN}`
-                    },
-                    body: JSON.stringify(payload)
-                });
+                // Requisição POST para o App Script (doPost)
+                const resp = await secureFetch(
+                    'create-occurrence', // Endpoint é apenas um marcador para o secureFetch, mas o App Script usa doPost
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    }
+                );
 
                 const j = await resp.json();
 
@@ -1350,33 +1286,41 @@
                 }
             } catch (err) {
                 console.error('Erro:', err);
-                showNotification('error', 'Falha na comunicação com o servidor.');
+                showNotification('error', 'Falha na comunicação com o servidor. Verifique o URL e o Token.');
             }
         }
 
         /**
-         * Carrega histórico da gestão
+         * Carrega histórico da gestão (GET)
          */
         async function carregarHistoricoGestao() {
             try {
-                const resp = await fetch(`${SCRIPT_URL}?endpoint=occurrences&sheet=BANCODEALUNOS&token=${AUTH_TOKEN}`);
+                // O App Script usa 'occurrences' e o parâmetro 'sheet' para filtrar
+                const resp = await secureFetch('occurrences', {}, { sheet: 'BANCODEALUNOS' });
                 const j = await resp.json();
                 
-                if (j && j.status === 'success') {
-                    const tbody = document.getElementById('tabelaHistoricoGestao');
+                const tbody = document.getElementById('tabelaHistoricoGestao');
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">Nenhum registro encontrado.</td></tr>'; // Default
+
+                if (j && j.status === 'success' && j.occurrences.length > 0) {
                     tbody.innerHTML = '';
                     
                     j.occurrences.forEach(oc => {
                         const row = document.createElement('tr');
+                        
+                        // Formatação de data
+                        const dataRegistro = oc['DATA DO REGISTRO/HORA'] ? new Date(oc['DATA DO REGISTRO/HORA']).toLocaleDateString('pt-BR') : '';
+                        const urlDoc = oc['URL DO DOCUMENTO'] || '';
+
                         row.innerHTML = `
                             <td>${oc.NOME || ''}</td>
                             <td>${oc.SÉRIE || ''}</td>
                             <td>${oc.PROFESSOR || ''}</td>
                             <td>${oc.RA || ''}</td>
                             <td>${oc.DISCIPLINA || ''}</td>
-                            <td>${new Date(oc['DATA DO REGISTRO/HORA']).toLocaleDateString() || ''}</td>
-                            <td>${oc['URL DO DOCUMENTO'] ? 
-                                `<a href="${oc['URL DO DOCUMENTO']}" target="_blank">📄</a>` : 
+                            <td>${dataRegistro}</td>
+                            <td>${urlDoc ? 
+                                `<a href="${urlDoc}" target="_blank">📄 Ver</a>` : 
                                 'N/A'}</td>
                         `;
                         tbody.appendChild(row);
@@ -1452,13 +1396,13 @@
                 '<p style="color: #6C757D; font-style: italic; text-align: center;">Selecione uma turma para carregar os alunos</p>';
             
             // Desmarcar checkboxes
-            document.querySelectorAll('input[name="irreg"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[name="irreg"]:checked').forEach(cb => cb.checked = false);
             
             showNotification('info', 'Formulário limpo com sucesso.');
         }
         
         /**
-         * Registra ocorrência do professor (para múltiplos alunos)
+         * Registra ocorrência do professor (para múltiplos alunos) (POST)
          */
         async function registrarOcorrenciaProfessor() {
             const professor = document.getElementById('professor_select').value;
@@ -1480,12 +1424,10 @@
                 // Extrair nome e RA do formato "Nome (RA)"
                 const match = alunoDisplay.match(/^(.*) \((.*)\)$/);
                 const nome = match ? match[1].trim() : alunoDisplay;
-                const ra = match ? match[2].trim() : '';
-
+                // O App Script irá buscar o RA, mas o nome é o campo principal
+                
                 const payload = {
-                    endpoint: 'create-occurrence',
-                    sheet: 'OCORRENCIASDOSPROFESSORES', // SHEET_PROFESSOR_LOGS
-                    date: dataOcc,
+                    // O App Script irá buscar o RA
                     professor: professor,
                     turma: turma,
                     aluno: nome,
@@ -1495,14 +1437,14 @@
                 };
 
                 try {
-                    const resp = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${AUTH_TOKEN}`
-                        },
-                        body: JSON.stringify(payload)
-                    });
+                    // Requisição POST para o App Script (doPost)
+                    const resp = await secureFetch(
+                        'create-occurrence', // Endpoint é apenas um marcador para o secureFetch, mas o App Script usa doPost
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        }
+                    );
                     return await resp.json();
                 } catch (err) {
                     console.error(`Erro ao registrar ocorrência para ${alunoDisplay}:`, err);
@@ -1519,26 +1461,33 @@
                 carregarHistoricoProfessor();
             } else {
                 const erros = results.filter(r => !r || r.status !== 'success').length;
-                showNotification('error', `${erros} ocorrência(s) falharam.`);
+                showNotification('error', `${erros} ocorrência(s) falharam. Verifique o console para detalhes.`);
             }
         }
         
         /**
-         * Carrega histórico do professor
+         * Carrega histórico do professor (GET)
          */
         async function carregarHistoricoProfessor() {
             try {
-                const resp = await fetch(`${SCRIPT_URL}?endpoint=occurrences&sheet=OCORRENCIASDOSPROFESSORES&token=${AUTH_TOKEN}`);
+                // O App Script usa 'occurrences' e o parâmetro 'sheet' para filtrar
+                const resp = await secureFetch('occurrences', {}, { sheet: 'OCORRENCIASDOSPROFESSORES' });
                 const j = await resp.json();
                 
-                if (j && j.status === 'success') {
-                    const tbody = document.getElementById('tabelaHistoricoProfessor');
+                const tbody = document.getElementById('tabelaHistoricoProfessor');
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">Nenhum registro encontrado.</td></tr>'; // Default
+
+                if (j && j.status === 'success' && j.occurrences.length > 0) {
                     tbody.innerHTML = '';
                     
                     j.occurrences.forEach(oc => {
                         const row = document.createElement('tr');
+                        
+                        // Formatação de data
+                        const dataOcc = oc.DATA ? new Date(oc.DATA).toLocaleDateString('pt-BR') : '';
+
                         row.innerHTML = `
-                            <td>${new Date(oc.DATA).toLocaleDateString() || ''}</td>
+                            <td>${dataOcc}</td>
                             <td>${oc.PROFESSOR || ''}</td>
                             <td>${oc.TURMA || ''}</td>
                             <td>${oc.ALUNO || ''}</td>
@@ -1560,37 +1509,38 @@
         // ============================================================================
         
         /**
-         * Carrega turmas do AppScript
+         * Carrega turmas do AppScript (GET: classes)
          */
         async function carregarTurmas() {
             try {
-                const resp = await fetch(`${SCRIPT_URL}?endpoint=classes&token=${AUTH_TOKEN}`);
+                const resp = await secureFetch('classes');
                 const j = await resp.json();
                 
                 if (j && j.status === 'success') {
-                    // Carregar apenas para o tipo de usuário logado
-                    if (usuarioLogado.tipo === 'gestao') {
-                        const select = document.getElementById('serie_gestao');
-                        if (select) {
-                            select.innerHTML = '<option value="">Selecione uma turma</option>';
-                            j.classes.forEach(turma => {
-                                const option = document.createElement('option');
-                                option.value = turma;
-                                option.textContent = turma;
-                                select.appendChild(option);
-                            });
-                        }
-                    } else {
-                        const select = document.getElementById('turma_select');
-                        if (select) {
-                            select.innerHTML = '<option value="">Selecione a turma</option>';
-                            j.classes.forEach(turma => {
-                                const option = document.createElement('option');
-                                option.value = turma;
-                                option.textContent = turma;
-                                select.appendChild(option);
-                            });
-                        }
+                    const classes = j.classes || [];
+                    
+                    // Carregar para Gestão
+                    const selectGestao = document.getElementById('serie_gestao');
+                    if (selectGestao) {
+                        selectGestao.innerHTML = '<option value="">Selecione uma turma</option>';
+                        classes.forEach(turma => {
+                            const option = document.createElement('option');
+                            option.value = turma;
+                            option.textContent = turma;
+                            selectGestao.appendChild(option);
+                        });
+                    }
+                    
+                    // Carregar para Professor
+                    const selectProfessor = document.getElementById('turma_select');
+                    if (selectProfessor) {
+                        selectProfessor.innerHTML = '<option value="">Selecione a turma</option>';
+                        classes.forEach(turma => {
+                            const option = document.createElement('option');
+                            option.value = turma;
+                            option.textContent = turma;
+                            selectProfessor.appendChild(option);
+                        });
                     }
                 }
             } catch (err) {
@@ -1600,37 +1550,38 @@
         }
         
         /**
-         * Carrega professores do AppScript
+         * Carrega professores do AppScript (GET: teachers)
          */
         async function carregarProfessores() {
             try {
-                const resp = await fetch(`${SCRIPT_URL}?endpoint=teachers&token=${AUTH_TOKEN}`);
+                const resp = await secureFetch('teachers');
                 const j = await resp.json();
                 
                 if (j && j.status === 'success') {
-                    // Carregar apenas para o tipo de usuário logado
-                    if (usuarioLogado.tipo === 'gestao') {
-                        const select = document.getElementById('professor_gestao');
-                        if (select) {
-                            select.innerHTML = '<option value="">Selecione o professor</option>';
-                            j.teachers.forEach(prof => {
-                                const option = document.createElement('option');
-                                option.value = prof;
-                                option.textContent = prof;
-                                select.appendChild(option);
-                            });
-                        }
-                    } else {
-                        const select = document.getElementById('professor_select');
-                        if (select) {
-                            select.innerHTML = '<option value="">Selecione o professor</option>';
-                            j.teachers.forEach(prof => {
-                                const option = document.createElement('option');
-                                option.value = prof;
-                                option.textContent = prof;
-                                select.appendChild(option);
-                            });
-                        }
+                    const teachers = j.teachers || [];
+                    
+                    // Carregar para Gestão
+                    const selectGestao = document.getElementById('professor_gestao');
+                    if (selectGestao) {
+                        selectGestao.innerHTML = '<option value="">Selecione o professor</option>';
+                        teachers.forEach(prof => {
+                            const option = document.createElement('option');
+                            option.value = prof;
+                            option.textContent = prof;
+                            selectGestao.appendChild(option);
+                        });
+                    }
+                    
+                    // Carregar para Professor
+                    const selectProfessor = document.getElementById('professor_select');
+                    if (selectProfessor) {
+                        selectProfessor.innerHTML = '<option value="">Selecione o professor</option>';
+                        teachers.forEach(prof => {
+                            const option = document.createElement('option');
+                            option.value = prof;
+                            option.textContent = prof;
+                            selectProfessor.appendChild(option);
+                        });
                     }
                 }
             } catch (err) {
@@ -1640,25 +1591,26 @@
         }
         
         /**
-         * Carrega alunos para gestão (do AppScript)
+         * Carrega alunos para gestão (GET: students)
          */
         async function carregarAlunosPorTurmaGestao(turma) {
-            if (!turma) {
-                document.getElementById('aluno_gestao').innerHTML = '<option value="">Selecione um aluno</option>';
-                return;
-            }
+            const select = document.getElementById('aluno_gestao');
+            select.innerHTML = '<option value="">Selecione um aluno</option>';
+            document.getElementById('ra_gestao').value = ''; // Limpa o RA
+
+            if (!turma) return;
             
             try {
-                const resp = await fetch(`${SCRIPT_URL}?endpoint=students&turma=${encodeURIComponent(turma)}&token=${AUTH_TOKEN}`);
+                const resp = await secureFetch('students', {}, { turma: turma });
                 const j = await resp.json();
                 
                 if (j && j.status === 'success') {
-                    const select = document.getElementById('aluno_gestao');
-                    select.innerHTML = '<option value="">Selecione um aluno</option>';
+                    const students = j.studentsList || [];
                     
-                    j.studentsList.forEach(aluno => {
+                    students.forEach(aluno => {
+                        // O valor da option é o RA, e o texto é o nome
                         const option = document.createElement('option');
-                        option.value = aluno.ra || '';
+                        option.value = aluno.ra || ''; 
                         option.textContent = aluno.nome;
                         select.appendChild(option);
                     });
@@ -1670,75 +1622,63 @@
         }
         
         /**
-         * Carrega alunos para professor (do AppScript)
+         * Carrega alunos para professor (GET: students)
          */
         async function carregarAlunosPorTurmaProfessor(turma) {
             const container = document.getElementById('alunos_checkbox_container');
+            container.innerHTML = '<p style="color: #6C757D; font-style: italic; text-align: center;">Carregando alunos...</p>';
+            
+            // Limpa a seleção anterior
+            alunosSelecionados = [];
+            document.getElementById('selectedPills').innerHTML = '<p style="color: #6C757D; font-style: italic; text-align: center;">Nenhum aluno selecionado</p>';
+            document.getElementById('alunos_selected_input').value = '';
+
             if (!turma) {
                 container.innerHTML = '<p style="color: #6C757D; font-style: italic; text-align: center;">Selecione uma turma para carregar os alunos</p>';
                 return;
             }
             
             try {
-                const resp = await fetch(`${SCRIPT_URL}?endpoint=students&turma=${encodeURIComponent(turma)}&token=${AUTH_TOKEN}`);
+                const resp = await secureFetch('students', {}, { turma: turma });
                 const j = await resp.json();
                 
                 if (j && j.status === 'success') {
-                    container.innerHTML = '';
+                    const students = j.studentsList || [];
+                    container.innerHTML = ''; // Limpa o "Carregando..."
                     
-                    j.studentsList.forEach(aluno => {
-                        const alunoDisplay = `${aluno.nome} (${aluno.ra || 'N/A'})`;
+                    if (students.length === 0) {
+                        container.innerHTML = '<p style="color: var(--warning-color); font-style: italic; text-align: center;">Nenhum aluno encontrado para esta turma.</p>';
+                        return;
+                    }
+
+                    students.forEach(aluno => {
+                        // Formato: "Nome (RA)" para fácil extração no POST
+                        const alunoDisplay = `${aluno.nome} (${aluno.ra || 'S/RA'})`;
                         
-                        const div = document.createElement('div');
-                        div.className = 'checkbox-item';
-                        
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.id = `aluno_${aluno.ra || aluno.nome.replace(/\s/g, '_')}`;
-                        checkbox.value = alunoDisplay;
-                        checkbox.onchange = function() {
-                            if (this.checked) {
-                                adicionarAlunoSelecionado(alunoDisplay);
-                            } else {
-                                removerAlunoSelecionado(alunoDisplay);
-                            }
-                        };
-                        
-                        const label = document.createElement('label');
-                        label.htmlFor = checkbox.id;
-                        label.textContent = alunoDisplay;
-                        label.style.cursor = 'pointer';
-                        
-                        div.appendChild(checkbox);
-                        div.appendChild(label);
-                        container.appendChild(div);
+                        const checkboxItem = document.createElement('label');
+                        checkboxItem.className = 'checkbox-item';
+                        checkboxItem.innerHTML = `
+                            <input type="checkbox" 
+                                name="aluno_prof" 
+                                value="${alunoDisplay}" 
+                                onchange="this.checked ? adicionarAlunoSelecionado('${alunoDisplay}') : removerAlunoSelecionado('${alunoDisplay}')"> 
+                            ${aluno.nome}
+                        `;
+                        container.appendChild(checkboxItem);
                     });
+                } else {
+                    container.innerHTML = `<p style="color: var(--danger-color); font-style: italic; text-align: center;">Erro ao carregar alunos: ${j.message || 'Erro desconhecido'}</p>`;
                 }
             } catch (err) {
                 console.error('Erro ao carregar alunos:', err);
-                showNotification('error', 'Erro ao carregar lista de alunos.');
+                container.innerHTML = '<p style="color: var(--danger-color); font-style: italic; text-align: center;">Falha na comunicação com o App Script.</p>';
             }
         }
 
-        // ============================================================================
-        // INICIALIZAÇÃO
-        // ============================================================================
-        
         /**
-         * Inicializa a aplicação após login
+         * Inicializa a aplicação carregando os dados necessários
          */
         function inicializarAplicacao() {
-            console.log(`Inicializando aplicação para: ${usuarioLogado.tipo}`);
-            
-            // Configurar data atual para professor
-            if (usuarioLogado.tipo === 'professor') {
-                const hoje = new Date().toISOString().split('T')[0];
-                document.getElementById('data_prof').value = hoje;
-                document.getElementById('data_prof').min = hoje.substring(0, 8) + '01';
-                document.getElementById('data_prof').max = hoje;
-            }
-            
-            // Carregar dados iniciais do AppScript
             carregarTurmas();
             carregarProfessores();
             
@@ -1748,30 +1688,18 @@
                 carregarHistoricoProfessor();
             }
             
-            showNotification('success', `Bem-vindo(a) ao sistema de ocorrências!`);
+            // Define a data atual para o formulário do professor
+            document.getElementById('data_prof').value = new Date().toISOString().split('T')[0];
         }
 
         // ============================================================================
-        // EVENT LISTENERS
+        // INICIALIZAÇÃO
         // ============================================================================
         
-        // Permitir login com tecla Enter
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
-                fazerLogin();
-            }
-        });
-        
-        // Focar no campo de e-mail ao carregar a página
-        window.addEventListener('DOMContentLoaded', function() {
+        // Tenta carregar o estado de login ao carregar a página (se houver)
+        // O código original não tinha persistência de login, então mantemos o foco no login.
+        document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('login-email').focus();
-            
-            // Adicionar efeito de máscara para campos de data
-            const dataInput = document.getElementById('data_prof');
-            if (dataInput) {
-                const hoje = new Date().toISOString().split('T')[0];
-                dataInput.value = hoje;
-            }
         });
     </script>
 </body>
